@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Exercise } from "@prisma/client";
 import { useState } from "react";
 
-export default function ExerciseFormDialog(params: { actionName: string, serverAction: (params: FormData) => (Promise<Exercise | ActionError>), exercise: Exercise }) {
+export default function ExerciseFormDialog(params: { actionName: string, serverAction: (params: FormData) => (Promise<Exercise | ActionError>), exercise: Exercise | null }) {
 
     const [dialogIsOpen, setDialogIsOpen] = useState(false);
 

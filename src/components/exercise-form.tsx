@@ -14,7 +14,7 @@ import { Exercise } from "@prisma/client";
 import { ActionError } from "@/actions/model/action-error";
 
 
-export default function ExerciseForm({ saveAction, exercise, setDialogIsOpen }: { saveAction: (formData: FormData) => Promise<Exercise | ActionError>, exercise: Exercise, setDialogIsOpen: (isOpen: boolean) => void }) {
+export default function ExerciseForm({ saveAction, exercise, setDialogIsOpen }: { saveAction: (formData: FormData) => Promise<Exercise | ActionError>, exercise: Exercise | null, setDialogIsOpen: (isOpen: boolean) => void }) {
     const [message, setMessage] = useState("");
 
     async function handleSubmit(formData: FormData) {

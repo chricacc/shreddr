@@ -21,18 +21,18 @@ export default async function ExercisesPage() {
     });
 
     return (
-        <>
-            <div className="flex flex-row md:gap-8 justify-between sm:justify-start">
+        <div className="max-w-[1260px]">
+            <div className="flex flex-row justify-between">
                 <h1 className="text-3xl pb-4">Exercises ({count})</h1>
                 <ExerciseFormDialog actionName="Create" serverAction={createExercise} exercise={null} />
             </div>
-            <div className="flex sm:flex-row flex-col gap-4 flex-wrap">
+            <div className="flex sm:flex-row flex-col gap-5 flex-wrap">
                 {exercises.map((exercise) => (
                     <Link key={exercise.id} href={`/exercises/${exercise.slug}`}>
                         <ExerciseCard key={exercise.id} exercise={exercise} />
                     </Link>
                 ))}
             </div>
-        </>
+        </div>
     );
 }
