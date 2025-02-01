@@ -5,7 +5,7 @@ import Providers from "@/components/theme-provider";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { cookies } from "next/headers";
-import BackButton from "@/components/backbutton";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,6 +45,7 @@ export default async function RootLayout({
               <div className="md:mx-20 mx-4 mt-4">
                 {children}
               </div>
+              <Toaster />
             </main>
           </SidebarProvider>
         </Providers>

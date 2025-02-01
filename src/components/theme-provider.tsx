@@ -12,20 +12,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       disableTransitionOnChange
     >
       {children}
-      <ToasterProvider />
     </ThemeProvider>
-  )
-}
-
-function ToasterProvider() {
-  const { resolvedTheme } = useTheme()
-
-  return (
-    <Toaster
-      richColors
-      closeButton
-      position='top-center'
-      theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
-    />
   )
 }

@@ -8,17 +8,26 @@ import { Textarea } from "@/components/ui/textarea";
 
 import FormSubmitButton from "./form-submit-button";
 import { DialogFooter } from "./ui/dialog";
-import { useActionState } from "react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 
-export default function ExerciseForm({ saveAction, exercise }: { saveAction: (prevState: any, formData: FormData) => void, exercise: any }) {
-    const initialState = {
-        message: '',
+export default function ExerciseForm({ saveAction, exercise, setDialogIsOpen }: { saveAction: (formData: FormData) => void, exercise: any, setDialogIsOpen: any }) {
+    const [message, setMessage] = useState("");
+
+    async function handleSubmit(formData: FormData) {
+        const response = await saveAction(formData);
+        if (response?.message) {
+            setMessage(response?.message);
+            return;
+        } else if (response?.id) {
+            toast(`Exercise ${response?.name} saved!`);
+            setDialogIsOpen(false);
+        }
     }
-    const [state, formAction] = useActionState(saveAction, initialState);
 
     return (
-        <form action={formAction}>
+        <form action={handleSubmit}>
             <Input name="id" type="hidden" defaultValue={exercise?.id} />
             <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -52,7 +61,7 @@ export default function ExerciseForm({ saveAction, exercise }: { saveAction: (pr
                 </div>
             </div>
             <DialogFooter>
-                <FormSubmitButton message={state?.message} />
+                <FormSubmitButton message={message} />
             </DialogFooter>
         </form>
 
