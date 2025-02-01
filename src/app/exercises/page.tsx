@@ -22,9 +22,10 @@ export default async function ExercisesPage() {
 
     return (
         <>
-            <h1 className="text-3xl pb-4">Exercises ({count})</h1>
-
-            <ExerciseFormDialog actionName="Create" serverAction={createExercise} exercise={null} />
+            <div className="flex flex-row md:gap-8 justify-between sm:justify-start">
+                <h1 className="text-3xl pb-4">Exercises ({count})</h1>
+                <ExerciseFormDialog actionName="Create" serverAction={createExercise} exercise={null} />
+            </div>
             <div className="flex sm:flex-row flex-col gap-4 flex-wrap">
                 {exercises.map((exercise) => (
                     <Link key={exercise.id} href={`/exercises/${exercise.slug}`}>

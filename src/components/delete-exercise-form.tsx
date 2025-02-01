@@ -22,6 +22,6 @@ export default function DeleteExerciseForm(params: { exerciseId: string }) {
 
     return (<form action={handleSubmit}>
         <Input name="id" defaultValue={params.exerciseId} type="hidden" />
-        <Button type="submit">Delete</Button>
+        <Button type="submit" variant="destructive">Delete</Button>
     </form>)
 }
