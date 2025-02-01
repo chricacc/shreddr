@@ -7,7 +7,9 @@ import { Exercise, Prisma } from '@prisma/client';
 import { ActionError } from "./model/action-error";
 
 
-export async function createExercise(params: FormData): (Promise<Exercise | ActionError>) {
+export async function createExercise(params: FormData, tags: string[]): (Promise<Exercise | ActionError>) {
+    console.log(JSON.stringify(tags));
+
     let response = null;
     try {
         const createdExercise = await prisma.exercise.create({
@@ -35,7 +37,8 @@ export async function createExercise(params: FormData): (Promise<Exercise | Acti
     return response;
 }
 
-export async function updateExercise(params: FormData): (Promise<Exercise | ActionError>) {
+export async function updateExercise(params: FormData, tags: string[]): (Promise<Exercise | ActionError>) {
+    console.log(JSON.stringify(tags));
     const slug = (params.get("name") as string).replace(/\s+/g, "-").toLowerCase();
     let response = null;
     try {
