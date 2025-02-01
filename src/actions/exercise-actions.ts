@@ -3,9 +3,12 @@
 import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache";
 
-import { Prisma } from '@prisma/client';
+import { Exercise, Prisma } from '@prisma/client';
+import { ActionError } from "./model/action-error";
 
-export async function createExercise(params: FormData) {
+
+export async function createExercise(params: FormData): (Promise<Exercise | ActionError>) {
+    let response = null;
     try {
         const createdExercise = await prisma.exercise.create({
             data: {
@@ -16,23 +19,25 @@ export async function createExercise(params: FormData) {
             },
         });
         revalidatePath("/exercises");
-        return createdExercise
+        response = createdExercise;
     } catch (e) {
+        const error = new ActionError();
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
+
             if (e.code == "P2002") {
-                return { message: `This ${e.meta?.target == "slug" ? "name" : e.meta?.target} is already used!` };
-            } else {
-                return { message: "Something went wrong!" }
-            }
+                error.message = `This ${e.meta?.target == "slug" ? "name" : e.meta?.target} is already used!`;
+            };
+        } else {
+            error.message = "Something went wrong!";
         }
-
+        response = error;
     }
-
-
+    return response;
 }
 
-export async function updateExercise(params: FormData) {
+export async function updateExercise(params: FormData): (Promise<Exercise | ActionError>) {
     const slug = (params.get("name") as string).replace(/\s+/g, "-").toLowerCase();
+    let response = null;
     try {
         const updatedExercise = await prisma.exercise.update({
             where: { id: params.get("id") as string },
@@ -45,30 +50,38 @@ export async function updateExercise(params: FormData) {
         });
 
         revalidatePath("/exercises/" + slug);
-        return updatedExercise;
+        response = updatedExercise;
     } catch (e) {
+        const error = new ActionError();
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             if (e.code == "P2002") {
-                return { message: `This ${e.meta?.target == "slug" ? "name" : e.meta?.target} is already used!` };
+                error.message = `This ${e.meta?.target == "slug" ? "name" : e.meta?.target} is already used!`;
             } else {
-                return { message: "Something went wrong!" }
+                error.message = "Something went wrong!";
             }
         }
+        response = error;
     }
 
     revalidatePath("/exercises/" + slug);
+    return response;
 }
 
-export async function deleteExercise(params: FormData) {
+export async function deleteExercise(params: FormData): (Promise<Exercise | ActionError>) {
+    let response = null;
     try {
         const deletedExercise = await prisma.exercise.delete({
             where: { id: params.get("id") as string }
         });
         revalidatePath("/exercises")
-        return deletedExercise;
+        response = deletedExercise;
     } catch (e) {
+        const error = new ActionError();
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
-            return { message: "Something went wrong!" }
+            error.message = "Something went wrong!";
         }
+        response = error;
     }
+
+    return response;
 }

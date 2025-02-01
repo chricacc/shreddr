@@ -8,19 +8,21 @@ import { Textarea } from "@/components/ui/textarea";
 
 import FormSubmitButton from "./form-submit-button";
 import { DialogFooter } from "./ui/dialog";
-import { useState } from "react";
+import React, { useState } from "react";
 import { toast } from "sonner";
+import { Exercise } from "@prisma/client";
+import { ActionError } from "@/actions/model/action-error";
 
 
-export default function ExerciseForm({ saveAction, exercise, setDialogIsOpen }: { saveAction: (formData: FormData) => void, exercise: any, setDialogIsOpen: any }) {
+export default function ExerciseForm({ saveAction, exercise, setDialogIsOpen }: { saveAction: (formData: FormData) => Promise<Exercise | ActionError>, exercise: Exercise, setDialogIsOpen: (isOpen: boolean) => void }) {
     const [message, setMessage] = useState("");
 
     async function handleSubmit(formData: FormData) {
         const response = await saveAction(formData);
-        if (response?.message) {
-            setMessage(response?.message);
+        if (response instanceof ActionError) {
+            setMessage(response.message);
             return;
-        } else if (response?.id) {
+        } else {
             toast(`Exercise ${response?.name} saved!`);
             setDialogIsOpen(false);
         }

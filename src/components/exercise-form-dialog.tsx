@@ -1,11 +1,13 @@
 "use client"
 
+import { ActionError } from "@/actions/model/action-error";
 import ExerciseForm from "@/components/exercise-form";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Exercise } from "@prisma/client";
 import { useState } from "react";
 
-export default function ExerciseFormDialog(params: { actionName: string, serverAction: any, exercise: any }) {
+export default function ExerciseFormDialog(params: { actionName: string, serverAction: (params: FormData) => (Promise<Exercise | ActionError>), exercise: Exercise }) {
 
     const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
