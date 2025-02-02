@@ -1,7 +1,7 @@
 "use server"
-import { updateExercise } from "@/actions/exercise-actions";
-import DeleteExerciseForm from "@/components/delete-exercise-form";
-import ExerciseFormDialog from "@/components/exercise-form-dialog";
+import { updateExercise } from "@/actions/ExerciseActions";
+import DeleteExerciseButton from "@/components/DeleteExerciseButton";
+import ExerciseFormDialog from "@/components/ExerciseFormDialog";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -32,7 +32,7 @@ export default async function ExerciseDetailPage({ params }: { params: { id: str
                             <h1 className="text-3xl">{exercise?.name}</h1>
                             <div className="flex gap-2">
                                 <ExerciseFormDialog actionName="Edit" exercise={exercise} serverAction={updateExercise} tags={tags} />
-                                <DeleteExerciseForm exerciseId={exercise?.id} />
+                                <DeleteExerciseButton exerciseId={exercise?.id} />
                             </div>
                         </div>
                     </CardTitle>

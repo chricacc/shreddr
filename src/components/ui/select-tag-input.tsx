@@ -57,10 +57,7 @@ const SelectTagInput = React.forwardRef<HTMLInputElement, SelectTagInputProps>(
                             setDropdownOpen(true);
                         }}
                         onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ',') {
-                                e.preventDefault();
-                                addPendingDataPoint(pendingDataPoint);
-                            } else if (e.key === 'Backspace' && pendingDataPoint.length === 0 && value.length > 0) {
+                            if (e.key === 'Backspace' && pendingDataPoint.length === 0 && value.length > 0) {
                                 e.preventDefault();
                                 onChange(value.slice(0, -1));
                             }

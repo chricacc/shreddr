@@ -4,7 +4,8 @@ import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache";
 
 import { Exercise, Prisma, Tag } from '@prisma/client';
-import { ActionError, ExerciseWithTags } from "./model/action-error";
+import { ActionError } from "./model/ActionError";
+import { ExerciseWithTags } from "./model/ExerciseWithTags";
 
 export async function createExercise(params: FormData, tags: string[]): (Promise<ExerciseWithTags | ActionError>) {
 
@@ -32,7 +33,7 @@ export async function createExercise(params: FormData, tags: string[]): (Promise
         revalidatePath("/exercises");
         response = createdExercise;
     } catch (e) {
-        const error = new ActionError();
+        const error: ActionError = { message: "" }
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
 
             if (e.code == "P2002") {
@@ -72,7 +73,7 @@ export async function updateExercise(params: FormData, tags: string[]): (Promise
         revalidatePath("/exercises/" + slug);
         response = updatedExercise;
     } catch (e) {
-        const error = new ActionError();
+        const error: ActionError = { message: "" };
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             if (e.code == "P2002") {
                 error.message = `This ${e.meta?.target == "slug" ? "name" : e.meta?.target} is already used!`;
@@ -96,7 +97,7 @@ export async function deleteExercise(params: FormData): (Promise<Exercise | Acti
         revalidatePath("/exercises")
         response = deletedExercise;
     } catch (e) {
-        const error = new ActionError();
+        const error: ActionError = { message: "" };
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             error.message = "Something went wrong!";
         }

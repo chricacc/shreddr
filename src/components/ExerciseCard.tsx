@@ -1,7 +1,7 @@
 import { Tag } from "@prisma/client";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Badge } from "./ui/badge";
-import { ExerciseWithTags } from "@/actions/model/action-error";
+import { ExerciseWithTags } from "@/actions/model/ExerciseWithTags";
 
 export default function ExerciseCard({ exercise }: { exercise: ExerciseWithTags }) {
     return (

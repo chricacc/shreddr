@@ -6,15 +6,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-import FormSubmitButton from "./form-submit-button";
+import FormSubmitButton from "./FormSubmitButton";
 import { DialogFooter } from "./ui/dialog";
 import React, { useState } from "react";
 import { toast } from "sonner";
-import { ActionError, ExerciseWithTags } from "@/actions/model/action-error";
+import { ActionError } from "@/actions/model/ActionError";
 import { SelectTagInput } from "./ui/select-tag-input";
+import { ExerciseWithTags } from "@/actions/model/ExerciseWithTags";
 
+interface ExerciseFormProps {
+    saveAction: (formData: FormData, tags: string[]) => Promise<ExerciseWithTags | ActionError>,
+    exercise: ExerciseWithTags | null,
+    setDialogIsOpen: (isOpen: boolean) => void, tags: string[]
+}
 
-export default function ExerciseForm({ saveAction, exercise, setDialogIsOpen, tags }: { saveAction: (formData: FormData, tags: string[]) => Promise<ExerciseWithTags | ActionError>, exercise: ExerciseWithTags | null, setDialogIsOpen: (isOpen: boolean) => void, tags: string[] }) {
+export default function ExerciseForm({ saveAction, exercise, setDialogIsOpen, tags }: ExerciseFormProps) {
 
     const simpleTags = exercise?.tags?.map(t => t.name);
 
@@ -23,7 +29,7 @@ export default function ExerciseForm({ saveAction, exercise, setDialogIsOpen, ta
 
     async function handleSubmit(formData: FormData) {
         const response = await saveAction(formData, (selectedTags.length) ? selectedTags : []);
-        if (response instanceof ActionError) {
+        if (response?.message) {
             setMessage(response.message);
             return;
         } else {

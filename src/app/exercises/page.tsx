@@ -1,6 +1,6 @@
-import { createExercise } from "@/actions/exercise-actions";
-import ExerciseCard from "@/components/exercise-card";
-import ExerciseFormDialog from "@/components/exercise-form-dialog";
+import { createExercise } from "@/actions/ExerciseActions";
+import ExerciseCard from "@/components/ExerciseCard";
+import ExerciseFormDialog from "@/components/ExerciseFormDialog";
 
 import prisma from "@/lib/prisma";
 import { Tag } from "@prisma/client";

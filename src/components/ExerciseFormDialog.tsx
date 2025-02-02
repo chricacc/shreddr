@@ -1,7 +1,7 @@
 "use client"
 
-import { ActionError, ExerciseWithTags } from "@/actions/model/action-error";
-import ExerciseForm from "@/components/exercise-form";
+import { ActionError, ExerciseWithTags } from "@/actions/model/ActionError";
+import ExerciseForm from "@/components/ExerciseForm";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
