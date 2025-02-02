@@ -1,13 +1,12 @@
 "use client"
 
-import { ActionError } from "@/actions/model/action-error";
+import { ActionError, ExerciseWithTags } from "@/actions/model/action-error";
 import ExerciseForm from "@/components/exercise-form";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Exercise } from "@prisma/client";
 import { useState } from "react";
 
-export default function ExerciseFormDialog(params: { actionName: string, serverAction: (params: FormData) => (Promise<Exercise | ActionError>), exercise: Exercise | null }) {
+export default function ExerciseFormDialog(params: { actionName: string, serverAction: (params: FormData, tags: string[]) => (Promise<ExerciseWithTags | ActionError>), exercise: ExerciseWithTags | null, tags: string[] }) {
 
     const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
@@ -23,7 +22,7 @@ export default function ExerciseFormDialog(params: { actionName: string, serverA
                         {params.actionName} your exercise. Click save when you&apos;re done.
                     </DialogDescription>
                 </DialogHeader>
-                <ExerciseForm saveAction={params.serverAction} exercise={params.exercise} setDialogIsOpen={setDialogIsOpen} />
+                <ExerciseForm saveAction={params.serverAction} exercise={params.exercise} setDialogIsOpen={setDialogIsOpen} tags={params.tags} />
             </DialogContent >
         </Dialog >
     );

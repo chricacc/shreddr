@@ -14,7 +14,8 @@ datasource db {
 }
 
 model Tag {
-  name String @id
+  name      String     @id
+  exercises Exercise[]
 }
 
 model Exercise {
@@ -26,6 +27,7 @@ model Exercise {
   archived    Boolean? @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  tags        Tag[]
 
   @@index(slug)
 }

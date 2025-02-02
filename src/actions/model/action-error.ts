@@ -4,3 +4,9 @@ export class ActionError {
         this.message = "";
     }
 }
+
+import { Prisma } from '@prisma/client'
+
+export type ExerciseWithTags = Prisma.ExerciseGetPayload<{
+    include: { tags: true }
+}>

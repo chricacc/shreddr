@@ -2,9 +2,11 @@
 import { updateExercise } from "@/actions/exercise-actions";
 import DeleteExerciseForm from "@/components/delete-exercise-form";
 import ExerciseFormDialog from "@/components/exercise-form-dialog";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 import prisma from "@/lib/prisma";
+import { Tag } from "@prisma/client";
 
 export default async function ExerciseDetailPage({ params }: { params: { id: string } }) {
     const { id } = await params;
@@ -13,8 +15,13 @@ export default async function ExerciseDetailPage({ params }: { params: { id: str
             slug: id,
             archived: false,
             published: true
+        },
+        include: {
+            tags: true
         }
     })
+
+    const tags: string[] = (await prisma.tag.findMany()).map((tag: Tag) => { return tag.name });
 
     return (
         exercise ? (
@@ -24,7 +31,7 @@ export default async function ExerciseDetailPage({ params }: { params: { id: str
                         <div className="flex flex-row justify-between">
                             <h1 className="text-3xl">{exercise?.name}</h1>
                             <div className="flex gap-2">
-                                <ExerciseFormDialog actionName="Edit" exercise={exercise} serverAction={updateExercise} />
+                                <ExerciseFormDialog actionName="Edit" exercise={exercise} serverAction={updateExercise} tags={tags} />
                                 <DeleteExerciseForm exerciseId={exercise?.id} />
                             </div>
                         </div>
@@ -35,7 +42,11 @@ export default async function ExerciseDetailPage({ params }: { params: { id: str
                     <p>{exercise?.description}</p>
                 </CardContent>
                 <CardFooter>
-                    <p>{exercise?.published ? "published" : "draft"}</p>
+                    <div className="flex gap-2">
+                        {exercise.tags.map((tag: Tag) => {
+                            return <Badge key={tag.name}>{tag.name}</Badge>
+                        })}
+                    </div>
                 </CardFooter>
             </Card >
         ) : (

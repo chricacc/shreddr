@@ -10,18 +10,19 @@ import FormSubmitButton from "./form-submit-button";
 import { DialogFooter } from "./ui/dialog";
 import React, { useState } from "react";
 import { toast } from "sonner";
-import { Exercise } from "@prisma/client";
-import { ActionError } from "@/actions/model/action-error";
+import { ActionError, ExerciseWithTags } from "@/actions/model/action-error";
 import { SelectTagInput } from "./ui/select-tag-input";
 
 
-export default function ExerciseForm({ saveAction, exercise, setDialogIsOpen }: { saveAction: (formData: FormData, tags: string[]) => Promise<Exercise | ActionError>, exercise: Exercise | null, setDialogIsOpen: (isOpen: boolean) => void }) {
+export default function ExerciseForm({ saveAction, exercise, setDialogIsOpen, tags }: { saveAction: (formData: FormData, tags: string[]) => Promise<ExerciseWithTags | ActionError>, exercise: ExerciseWithTags | null, setDialogIsOpen: (isOpen: boolean) => void, tags: string[] }) {
+
+    const simpleTags = exercise?.tags?.map(t => t.name);
 
     const [message, setMessage] = useState("");
-    const [tags, setTags] = useState(["rythm", "lead"]);
+    const [selectedTags, setSelectedTags] = useState((simpleTags?.length) ? simpleTags : []);
 
     async function handleSubmit(formData: FormData) {
-        const response = await saveAction(formData, tags);
+        const response = await saveAction(formData, (selectedTags.length) ? selectedTags : []);
         if (response instanceof ActionError) {
             setMessage(response.message);
             return;
@@ -65,11 +66,9 @@ export default function ExerciseForm({ saveAction, exercise, setDialogIsOpen }: 
                     <SelectTagInput
                         className="col-span-3"
                         name="tags"
-                        value={tags}
-                        onChange={setTags}
-                        options={[
-                            "rythm", "lead", "down-picking", "alternate-picking"
-                        ]}
+                        value={selectedTags}
+                        onChange={setSelectedTags}
+                        options={tags}
                     />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">

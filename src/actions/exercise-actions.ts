@@ -3,12 +3,14 @@
 import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache";
 
-import { Exercise, Prisma } from '@prisma/client';
-import { ActionError } from "./model/action-error";
+import { Exercise, Prisma, Tag } from '@prisma/client';
+import { ActionError, ExerciseWithTags } from "./model/action-error";
 
+export async function createExercise(params: FormData, tags: string[]): (Promise<ExerciseWithTags | ActionError>) {
 
-export async function createExercise(params: FormData, tags: string[]): (Promise<Exercise | ActionError>) {
-    console.log(JSON.stringify(tags));
+    const tagModels: Tag[] = tags?.map((tag: string) => {
+        return { name: tag }
+    });
 
     let response = null;
     try {
@@ -17,8 +19,15 @@ export async function createExercise(params: FormData, tags: string[]): (Promise
                 name: params.get("name") as string,
                 description: params.get("description") as string,
                 slug: (params.get("name") as string).replace(/\s+/g, "-").toLowerCase(),
-                published: params.get("published") === "true"
+                published: params.get("published") === "true",
+                tags: {
+                    connect: tagModels,
+
+                }
             },
+            include: {
+                tags: true
+            }
         });
         revalidatePath("/exercises");
         response = createdExercise;
@@ -37,8 +46,10 @@ export async function createExercise(params: FormData, tags: string[]): (Promise
     return response;
 }
 
-export async function updateExercise(params: FormData, tags: string[]): (Promise<Exercise | ActionError>) {
-    console.log(JSON.stringify(tags));
+export async function updateExercise(params: FormData, tags: string[]): (Promise<ExerciseWithTags | ActionError>) {
+    const tagModels: Tag[] = tags?.map((tag: string) => {
+        return { name: tag }
+    });
     const slug = (params.get("name") as string).replace(/\s+/g, "-").toLowerCase();
     let response = null;
     try {
@@ -48,8 +59,14 @@ export async function updateExercise(params: FormData, tags: string[]): (Promise
                 name: params.get("name") as string,
                 description: params.get("description") as string,
                 slug: slug,
-                published: params.get("published") === "true"
+                published: params.get("published") === "true",
+                tags: {
+                    set: tagModels
+                }
             },
+            include: {
+                tags: true
+            }
         });
 
         revalidatePath("/exercises/" + slug);
@@ -88,3 +105,5 @@ export async function deleteExercise(params: FormData): (Promise<Exercise | Acti
 
     return response;
 }
+
+

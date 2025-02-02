@@ -36,7 +36,7 @@ const SelectTagInput = React.forwardRef<HTMLInputElement, SelectTagInputProps>(
                         'has-[:focus-visible]:outline-none has-[:focus-visible]:ring-1 has-[:focus-visible]:ring-neutral-950 has-[:focus-visible]:ring-offset-0 dark:has-[:focus-visible]:ring-neutral-300 min-h-10 flex w-full flex-wrap gap-2 rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm ring-offset-white  disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:bg-neutral-950 dark:ring-offset-neutral-950',
                     )}
                 >
-                    {value.map((val) => (
+                    {value?.map((val) => (
                         <Badge key={val} variant="secondary">
                             {val}
                             <Button
