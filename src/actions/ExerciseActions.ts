@@ -7,11 +7,31 @@ import { Exercise, Prisma, Tag } from '@prisma/client';
 import { ActionError } from "./model/ActionError";
 import { ExerciseWithTags } from "./model/ExerciseWithTags";
 
-export async function createExercise(params: FormData, tags: string[]): (Promise<ExerciseWithTags | ActionError>) {
 
-    const tagModels: Tag[] = tags?.map((tag: string) => {
-        return { name: tag }
+import { z } from "zod";
+import { actionClient } from "@/lib/safe-action";
+
+// This schema is used to validate input from client.
+const exerciseSchema = z.object({
+    name: z.string().min(3).max(50),
+    description: z.string(),
+    tags: z.array(z.object({ tag: z.string() })),
+    published: z.boolean()
+});
+
+/*export const createExercise = actionClient
+    .schema(exerciseSchema)
+    .action(async (params: FormData): (Promise<ExerciseWithTags | ActionError>) => {
+
     });
+*/
+export async function createExercise(params: FormData): (Promise<ExerciseWithTags | ActionError>) {
+
+    const tagModels: Tag[] = params.getAll("tags")
+        .filter((tag: FormDataEntryValue) => tag.toString().length > 0)
+        .map((tag: FormDataEntryValue) => {
+            return { name: tag.toString() }
+        });
 
     let response = null;
     try {
@@ -47,10 +67,14 @@ export async function createExercise(params: FormData, tags: string[]): (Promise
     return response;
 }
 
-export async function updateExercise(params: FormData, tags: string[]): (Promise<ExerciseWithTags | ActionError>) {
-    const tagModels: Tag[] = tags?.map((tag: string) => {
-        return { name: tag }
-    });
+export async function updateExercise(params: FormData): (Promise<ExerciseWithTags | ActionError>) {
+
+    const tagModels: Tag[] = params.getAll("tags")
+        .filter((tag: FormDataEntryValue) => tag.toString().length > 0)
+        .map((tag: FormDataEntryValue) => {
+            return { name: tag.toString() }
+        });
+
     const slug = (params.get("name") as string).replace(/\s+/g, "-").toLowerCase();
     let response = null;
     try {

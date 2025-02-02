@@ -28,7 +28,10 @@ export default function ExerciseForm({ saveAction, exercise, setDialogIsOpen, ta
     const [selectedTags, setSelectedTags] = useState((simpleTags?.length) ? simpleTags : []);
 
     async function handleSubmit(formData: FormData) {
-        const response = await saveAction(formData, (selectedTags.length) ? selectedTags : []);
+        selectedTags.forEach((tag: string) => {
+            formData.append("tags", tag);
+        });
+        const response = await saveAction(formData);
         if (response?.message) {
             setMessage(response.message);
             return;
