@@ -1,4 +1,1 @@
-export interface ActionError {
-    message: string
-}
-
+export class ActionError extends Error { }
