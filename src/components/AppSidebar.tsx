@@ -53,7 +53,7 @@ export function AppSidebar() {
                     <SidebarMenuItem key="back-button" className="cursor-pointer">
                         <SidebarMenuButton asChild onClick={() => router.back()}>
                             <div>
-                                <MoveLeft />
+                                <MoveLeft className="text-secondary" />
                                 <span>Back</span>
                             </div>
                         </SidebarMenuButton>
@@ -70,7 +70,7 @@ export function AppSidebar() {
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
                                         <a href={item.url}>
-                                            <item.icon />
+                                            <item.icon className="text-secondary" />
                                             <span>{item.title}</span>
                                         </a>
                                     </SidebarMenuButton>
@@ -89,7 +89,7 @@ export function AppSidebar() {
                         <SidebarMenuItem key={footerItem.title}>
                             <SidebarMenuButton asChild>
                                 <a href={footerItem.url}>
-                                    <footerItem.icon />
+                                    <footerItem.icon className="text-secondary" />
                                     <span>{footerItem.title}</span>
                                 </a>
                             </SidebarMenuButton>

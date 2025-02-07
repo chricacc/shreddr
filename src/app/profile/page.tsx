@@ -13,7 +13,7 @@ export default function ProfilePage() {
             </div>
             <Card className="md:w-[450px] w-full">
                 <CardHeader>
-                    <h1 className="flex text-2xl items-center gap-2"><LucideUser /><span>Personal Info</span></h1>
+                    <h1 className="flex text-2xl items-center gap-2"><LucideUser className="text-secondary" /><span>Personal Info</span></h1>
                 </CardHeader>
                 <CardContent>
                     <form>

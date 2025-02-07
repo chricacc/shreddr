@@ -4,6 +4,7 @@ import ExerciseFormDialog from "@/components/ExerciseFormDialog";
 
 import prisma from "@/lib/prisma";
 import { Tag } from "@prisma/client";
+import { Dumbbell } from "lucide-react";
 import Link from "next/link";
 
 export default async function ExercisesPage() {
@@ -28,7 +29,7 @@ export default async function ExercisesPage() {
     return (
         <div className="max-w-[1260px]">
             <div className="flex flex-row justify-between">
-                <h1 className="text-3xl pb-4">Exercises ({count})</h1>
+                <h1 className="text-3xl pb-4 flex items-center gap-3"><Dumbbell className="text-secondary" />Exercises ({count})</h1>
                 <ExerciseFormDialog actionName="Create" serverAction={createExercise} exercise={null} tags={tags} />
             </div>
             <div className="flex sm:flex-row flex-col gap-5 flex-wrap">
