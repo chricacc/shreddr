@@ -33,7 +33,7 @@ const SelectTagInput = React.forwardRef<HTMLInputElement, SelectTagInputProps>(
             <div className={cn('relative', className)}>
                 <div
                     className={cn(
-                        'has-[:focus-visible]:outline-none has-[:focus-visible]:ring-1 has-[:focus-visible]:ring-neutral-950 has-[:focus-visible]:ring-offset-0 dark:has-[:focus-visible]:ring-neutral-300 min-h-10 flex w-full flex-wrap gap-2 rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm ring-offset-white  disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:bg-neutral-950 dark:ring-offset-neutral-950',
+                        'min-h-10 flex w-full flex-wrap gap-2 rounded-md border border-input px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50 bg-background ring-offset-bg-background has-[:focus-visible]:outline-none has-[:focus-visible]:ring-1 has-[:focus-visible]:ring-foreground has-[:focus-visible]:ring-offset-0',
                     )}
                 >
                     {value?.map((val) => (
@@ -50,7 +50,7 @@ const SelectTagInput = React.forwardRef<HTMLInputElement, SelectTagInputProps>(
                         </Badge>
                     ))}
                     <input
-                        className={cn('flex-1 outline-none placeholder:text-neutral-500 dark:placeholder:text-neutral-400')}
+                        className={cn('flex-1 outline-none placeholder:text-foreground bg-transparent')}
                         value={pendingDataPoint}
                         onChange={(e) => {
                             setPendingDataPoint(e.target.value);
@@ -69,7 +69,7 @@ const SelectTagInput = React.forwardRef<HTMLInputElement, SelectTagInputProps>(
                 </div>
                 {isDropdownOpen && pendingDataPoint && (
                     <ul
-                        className="absolute left-0 mt-1 max-h-60 w-full overflow-auto rounded-md border border-neutral-200 bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm dark:border-neutral-800 dark:bg-neutral-950"
+                        className="absolute left-0 mt-1 max-h-60 w-full overflow-auto rounded-md border border-neutral-200 bg-background py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                         role="listbox"
                     >
                         {options.filter(
@@ -85,7 +85,7 @@ const SelectTagInput = React.forwardRef<HTMLInputElement, SelectTagInputProps>(
                                 .map((option) => (
                                     <li
                                         key={option}
-                                        className="cursor-pointer select-none px-4 py-2 text-neutral-900 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
+                                        className="cursor-pointer select-none px-4 py-2 text-foreground hover:bg-muted"
                                         onMouseDown={() => addPendingDataPoint(option)}
                                     >
                                         {option}
