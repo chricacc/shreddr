@@ -47,7 +47,7 @@ export function AppSidebar() {
     ];
 
     return (
-        <Sidebar collapsible="icon" className="shadow-2xl dark:shadow-black drop-shadow-2xl">
+        <Sidebar collapsible="icon" className="shadow-2xl">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem key="back-button" className="cursor-pointer">

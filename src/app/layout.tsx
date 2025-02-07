@@ -39,8 +39,8 @@ export default async function RootLayout({
             <AppSidebar />
             <main className="w-full">
               <div className="flex p-4 md:p-2 items-center gap-4 md:gap-8">
-                <SidebarTrigger className="w-9 h-9 border" />
-                <h1 className="text-3xl">Shreddr</h1>
+                <SidebarTrigger className="w-10 h-10 border shadow" />
+                <h1 className="text-3xl text-secondary">Shreddr</h1>
               </div>
               <div className="md:mx-20 mx-4 mt-4">
                 {children}
