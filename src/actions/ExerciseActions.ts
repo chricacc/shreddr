@@ -115,7 +115,7 @@ export const updateExercise = actionClient
         return response;
     });
 
-export async function deleteExercise(params: FormData): (Promise<Exercise | ActionError>) {
+export async function deleteExercise(params: FormData): (Promise<Exercise>) {
     let response = null;
     try {
         const deletedExercise = await prisma.exercise.delete({
@@ -124,11 +124,7 @@ export async function deleteExercise(params: FormData): (Promise<Exercise | Acti
         revalidatePath("/exercises")
         response = deletedExercise;
     } catch (e) {
-        const error = { message: "" };
-        if (e instanceof Prisma.PrismaClientKnownRequestError) {
-            error.message = "Something went wrong!";
-        }
-        response = error;
+        throw new ActionError("Something went wrong!");
     }
 
     return response;

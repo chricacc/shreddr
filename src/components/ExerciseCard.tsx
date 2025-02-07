@@ -5,7 +5,7 @@ import { ExerciseWithTags } from "@/actions/model/ExerciseWithTags";
 
 export default function ExerciseCard({ exercise }: { exercise: ExerciseWithTags }) {
     return (
-        <Card className="sm:w-[300px] w-full cursor-pointer h-[150px]">
+        <Card className="sm:w-[300px] w-full cursor-pointer h-[150px] hover:bg-muted hover:drop-shadow-2xl">
             <CardHeader className="px-4 py-2 h-1/4">
                 <span className="text-xl">{exercise.name}</span>
             </CardHeader>
