@@ -1,12 +1,11 @@
 "use client"
 
-import { ActionError, ExerciseWithTags } from "@/actions/model/ActionError";
 import ExerciseForm from "@/components/ExerciseForm";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
 
-export default function ExerciseFormDialog(params: { actionName: string, serverAction: (params: FormData, tags: string[]) => (Promise<ExerciseWithTags | ActionError>), exercise: ExerciseWithTags | null, tags: string[] }) {
+export default function ExerciseFormDialog(params: { actionName: string, serverAction: (params: FormData, tags: string[]) => (Promise<any>), exercise, tags: string[] }) {
 
     const [dialogIsOpen, setDialogIsOpen] = useState(false);
 

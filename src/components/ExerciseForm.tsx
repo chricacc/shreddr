@@ -11,29 +11,25 @@ import { DialogFooter } from "./ui/dialog";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { SelectTagInput } from "./ui/select-tag-input";
-import { ExerciseWithTags } from "@/actions/model/ExerciseWithTags";
 
 interface ExerciseFormProps {
     saveAction: (formData: FormData) => Promise<any>,
-    exercise: ExerciseWithTags | null,
+    exercise,
     setDialogIsOpen: (isOpen: boolean) => void, tags: string[]
 }
 
 export default function ExerciseForm({ saveAction, exercise, setDialogIsOpen, tags }: ExerciseFormProps) {
 
-    const simpleTags = exercise?.tags?.map(t => t.name);
-
     const [message, setMessage] = useState("");
     const [nameMessages, setNameMessages] = useState([]);
     const [descriptionMessages, setDescriptionMessages] = useState([]);
-    const [selectedTags, setSelectedTags] = useState((simpleTags?.length) ? simpleTags : []);
+    const [selectedTags, setSelectedTags] = useState((exercise?.tags.length) ? exercise?.tags : []);
 
     async function handleSubmit(formData: FormData) {
         selectedTags.forEach((tag: string) => {
             formData.append("tags", tag);
         });
         const response = await saveAction(formData);
-        console.log(response);
         if (response.serverError) {
             setMessage(response.serverError);
             return;

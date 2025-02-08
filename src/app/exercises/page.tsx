@@ -1,30 +1,15 @@
 import { createExercise } from "@/actions/ExerciseActions";
 import ExerciseCard from "@/components/ExerciseCard";
 import ExerciseFormDialog from "@/components/ExerciseFormDialog";
+import { dependencies } from "@/dependency-injection/dependencies";
 
-import prisma from "@/lib/prisma";
-import { Tag } from "@prisma/client";
 import { Dumbbell } from "lucide-react";
 import Link from "next/link";
 
 export default async function ExercisesPage() {
-    const exercises = await prisma.exercise.findMany({
-        where: {
-            archived: false,
-            published: true
-        },
-        take: 30,
-        include: {
-            tags: true
-        }
-    });
-    const count = await prisma.exercise.count({
-        where: {
-            archived: false,
-            published: true
-        }
-    });
-    const tags: string[] = (await prisma.tag.findMany()).map((tag: Tag) => { return tag.name });
+    const exercises = await dependencies.exerciseRepository.findAll();
+    const count = await dependencies.exerciseRepository.count();
+    const tags: string[] = await dependencies.tagRepository.findAll();
 
     return (
         <div className="max-w-[1260px]">
@@ -34,8 +19,8 @@ export default async function ExercisesPage() {
             </div>
             <div className="flex sm:flex-row flex-col gap-5 flex-wrap">
                 {exercises.map((exercise) => (
-                    <Link key={exercise.slug} href={`/exercises/${exercise.slug}`}>
-                        <ExerciseCard key={exercise.id} exercise={exercise} />
+                    <Link key={exercise.getSlug()} href={`/exercises/${exercise.getSlug()}`}>
+                        <ExerciseCard key={exercise.getId()} exercise={exercise} />
                     </Link>
                 ))}
             </div>

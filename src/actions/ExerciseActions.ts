@@ -1,15 +1,15 @@
 'use server'
 
-import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache";
 
-import { Exercise, Prisma } from '@prisma/client';
 import { ActionError } from "./model/ActionError";
-
 
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { actionClient } from "@/lib/safe-action";
+import { dependencies } from "@/dependency-injection/dependencies";
+import { Exercise } from "@/domain/model/Exercise";
+import { PersistenceError } from "@/domain/errors/PersistenceError";
 
 const createExerciseSchema = zfd.formData({
     name: zfd.text(z.string().min(3).max(50)),
@@ -30,104 +30,59 @@ export const createExercise = actionClient
     .schema(createExerciseSchema)
     .action(async ({ parsedInput }) => {
 
-        const tags = parsedInput.tags ? parsedInput.tags : [];
+        const exercise: Exercise = new Exercise(null, parsedInput.name, parsedInput.description, parsedInput.tags ? parsedInput.tags : []);
 
-        const tagModels = tags
-            .filter((tag: FormDataEntryValue) => tag.toString().length > 0)
-            .map((tag: FormDataEntryValue) => {
-                return { name: tag.toString() }
-            });
+        if (parsedInput.published)
+            exercise.publish();
 
         let response = null;
         try {
-            const createdExercise = await prisma.exercise.create({
-                data: {
-                    name: parsedInput.name,
-                    description: parsedInput.description,
-                    slug: parsedInput.name.replace(/\s+/g, "-").toLowerCase(),
-                    published: parsedInput.published,
-                    tags: {
-                        connect: tagModels,
-                    }
-                },
-                include: {
-                    tags: true
-                }
-            });
-            revalidatePath("/exercises");
-            response = createdExercise;
+            response = await dependencies.exerciseRepository.create(exercise);
         } catch (e) {
-            if (e instanceof Prisma.PrismaClientKnownRequestError) {
-                if (e.code == "P2002") {
-                    throw new ActionError(`This ${e.meta?.target == "slug" ? "name" : e.meta?.target} is already used!`);
-                };
+            if (e instanceof PersistenceError) {
+                throw new ActionError(e.message);
             } else {
-                throw new ActionError("Something went wrong!");
+                throw new ActionError("Unexpected error");
             }
         }
-        return response;
+        revalidatePath("/exercises");
+        return Object.assign({}, response);
     });
 
 export const updateExercise = actionClient
     .schema(updateExerciseSchema)
     .action(async ({ parsedInput }) => {
 
-        const tags = parsedInput.tags ? parsedInput.tags : [];
+        const exercise: Exercise = new Exercise(parsedInput.id, parsedInput.name, parsedInput.description, parsedInput.tags ? parsedInput.tags : []);
 
-        const tagModels = tags
-            .filter((tag: FormDataEntryValue) => tag.toString().length > 0)
-            .map((tag: FormDataEntryValue) => {
-                return { name: tag.toString() }
-            });
+        if (parsedInput.published)
+            exercise.publish();
 
-        const slug = parsedInput.name.replace(/\s+/g, "-").toLowerCase();
         let response = null;
         try {
-            const updatedExercise = await prisma.exercise.update({
-                where: {
-                    id: parsedInput.id,
-                },
-                data: {
-                    name: parsedInput.name,
-                    description: parsedInput.description,
-                    slug: slug,
-                    published: parsedInput.published,
-                    tags: {
-                        set: tagModels
-                    }
-                },
-                include: {
-                    tags: true
-                }
-            });
-
-            revalidatePath("/exercises/" + slug);
-            response = updatedExercise;
+            response = await dependencies.exerciseRepository.update(exercise);
         } catch (e) {
-            if (e instanceof Prisma.PrismaClientKnownRequestError && e.code == "P2002") {
-                throw new ActionError(`This ${e.meta?.target == "slug" ? "name" : e.meta?.target} is already used!`);
+            if (e instanceof PersistenceError) {
+                throw new ActionError(e.message);
             } else {
-                throw new ActionError("Something went wrong!");
+                throw new ActionError("Unexpected error");
             }
         }
-
-        revalidatePath("/exercises/" + slug);
-        return response;
+        revalidatePath("/exercises/" + response.getSlug());
+        return Object.assign({}, response);
     });
 
-export async function deleteExercise(params: FormData): (Promise<Exercise>) {
+export async function deleteExercise(params: FormData) {
     let response = null;
     try {
-        const deletedExercise = await prisma.exercise.delete({
-            where: { id: params.get("id") as string }
-        });
+        const deletedExercise = await dependencies.exerciseRepository.delete(params.get("id") as string);
         revalidatePath("/exercises")
-        response = deletedExercise;
+        response = await deletedExercise;
     } catch (e) {
         throw new ActionError("Something went wrong!");
     }
 
-    return response;
+    return Object.assign({}, response);;
 }
 
 

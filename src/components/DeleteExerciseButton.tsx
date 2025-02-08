@@ -6,7 +6,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 
-export default function DeleteExerciseButton(params: { exerciseId: string }) {
+export default function DeleteExerciseButton(params: { exerciseId: string | null }) {
 
     const router = useRouter();
 
