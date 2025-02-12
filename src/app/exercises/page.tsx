@@ -1,4 +1,3 @@
-import { createExercise } from "@/actions/ExerciseActions";
 import ExerciseCard from "@/components/ExerciseCard";
 import ExerciseFormDialog from "@/components/ExerciseFormDialog";
 import { dependencies } from "@/dependency-injection/dependencies";
@@ -15,7 +14,7 @@ export default async function ExercisesPage() {
         <div className="max-w-[1260px]">
             <div className="flex flex-row justify-between">
                 <h1 className="text-3xl pb-4 flex items-center gap-3"><Dumbbell className="text-secondary" />Exercises ({count})</h1>
-                <ExerciseFormDialog actionName="Create" serverAction={createExercise} exercise={null} tags={tags} />
+                <ExerciseFormDialog actionName="Create" tags={tags} />
             </div>
             <div className="flex sm:flex-row flex-col gap-5 flex-wrap">
                 {exercises.map((exercise) => (

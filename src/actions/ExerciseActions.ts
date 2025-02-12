@@ -10,6 +10,7 @@ import { actionClient } from "@/lib/safe-action";
 import { dependencies } from "@/dependency-injection/dependencies";
 import { Exercise } from "@/domain/model/Exercise";
 import { PersistenceError } from "@/domain/errors/PersistenceError";
+import { InferSafeActionFnResult, InferServerError } from "next-safe-action";
 
 const createExerciseSchema = zfd.formData({
     name: zfd.text(z.string().min(3).max(50)),
@@ -68,7 +69,7 @@ export const updateExercise = actionClient
                 throw new ActionError("Unexpected error");
             }
         }
-        revalidatePath("/exercises/" + response.getSlug());
+        revalidatePath("/exercises/" + response?.getSlug());
         return Object.assign({}, response);
     });
 
@@ -85,4 +86,4 @@ export async function deleteExercise(params: FormData) {
     return Object.assign({}, response);;
 }
 
-
+export type createExerciseActionResult = InferSafeActionFnResult<typeof createExercise>;

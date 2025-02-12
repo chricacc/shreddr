@@ -11,39 +11,47 @@ import { DialogFooter } from "./ui/dialog";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { SelectTagInput } from "./ui/select-tag-input";
+import { createExercise, createExerciseActionResult, updateExercise } from "@/actions/ExerciseActions";
 
 interface ExerciseFormProps {
-    saveAction: (formData: FormData) => Promise<any>,
     exercise,
     setDialogIsOpen: (isOpen: boolean) => void, tags: string[]
 }
 
-export default function ExerciseForm({ saveAction, exercise, setDialogIsOpen, tags }: ExerciseFormProps) {
+export default function ExerciseForm({ exercise, setDialogIsOpen, tags }: ExerciseFormProps) {
+
+    const createMode = !exercise?.id;
 
     const [message, setMessage] = useState("");
     const [nameMessages, setNameMessages] = useState([]);
     const [descriptionMessages, setDescriptionMessages] = useState([]);
     const [selectedTags, setSelectedTags] = useState((exercise?.tags.length) ? exercise?.tags : []);
 
-    async function handleSubmit(formData: FormData) {
+    async function saveExercise(formData: FormData, serverAction: (formData: FormData) => any) {
         selectedTags.forEach((tag: string) => {
             formData.append("tags", tag);
         });
-        const response = await saveAction(formData);
+
+        const response = await serverAction(formData);
+
         if (response.serverError) {
             setMessage(response.serverError);
             return;
         } else if (response.validationErrors) {
-            setNameMessages(response.validationErrors.fieldErrors.name);
-            setDescriptionMessages(response.validationErrors.fieldErrors.description);
+            setNameMessages(response.validationErrors?.fieldErrors.name);
+            setDescriptionMessages(response.validationErrors?.fieldErrors.description);
         } else {
-            toast(`Exercise ${response.data.name} saved!`);
+            toast(`Exercise ${response.data?.name} saved!`);
             setDialogIsOpen(false);
         }
     }
 
+    function onSubmit(formData: FormData) {
+        return createMode ? saveExercise(formData, createExercise) : saveExercise(formData, updateExercise);
+    }
+
     return (
-        <form action={handleSubmit}>
+        <form action={onSubmit}>
             <Input name="id" type="hidden" defaultValue={exercise?.id} />
             <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">

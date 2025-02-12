@@ -1,5 +1,3 @@
-"use server"
-import { updateExercise } from "@/actions/ExerciseActions";
 import DeleteExerciseButton from "@/components/DeleteExerciseButton";
 import ExerciseFormDialog from "@/components/ExerciseFormDialog";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +19,7 @@ export default async function ExerciseDetailPage({ params }: { params: { id: str
                         <div className="flex flex-row justify-between">
                             <h1 className="text-3xl">{exercise.getName()}</h1>
                             <div className="flex gap-2">
-                                <ExerciseFormDialog actionName="Edit" exercise={Object.assign({}, exercise)} serverAction={updateExercise} tags={tags} />
+                                <ExerciseFormDialog actionName="Edit" exercise={Object.assign({}, exercise)} tags={tags} />
                                 <DeleteExerciseButton exerciseId={exercise.getId()} />
                             </div>
                         </div>
