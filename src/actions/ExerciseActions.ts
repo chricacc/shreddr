@@ -10,7 +10,7 @@ import { actionClient } from "@/lib/safe-action";
 import { dependencies } from "@/dependency-injection/dependencies";
 import { Exercise } from "@/domain/model/Exercise";
 import { PersistenceError } from "@/domain/errors/PersistenceError";
-import { InferSafeActionFnResult, InferServerError } from "next-safe-action";
+import { exerciseToDto } from "../application/model/ExerciseDto";
 
 const createExerciseSchema = zfd.formData({
     name: zfd.text(z.string().min(3).max(50)),
@@ -47,7 +47,9 @@ export const createExercise = actionClient
             }
         }
         revalidatePath("/exercises");
-        return Object.assign({}, response);
+        if (response) {
+            return exerciseToDto(response);
+        }
     });
 
 export const updateExercise = actionClient
@@ -70,20 +72,19 @@ export const updateExercise = actionClient
             }
         }
         revalidatePath("/exercises/" + response?.getSlug());
-        return Object.assign({}, response);
+        if (response) {
+            return exerciseToDto(response);
+        }
     });
 
 export async function deleteExercise(params: FormData) {
     let response = null;
-    try {
-        const deletedExercise = await dependencies.exerciseRepository.delete(params.get("id") as string);
-        revalidatePath("/exercises")
-        response = await deletedExercise;
-    } catch (e) {
-        throw new ActionError("Something went wrong!");
+
+    const deletedExercise = await dependencies.exerciseRepository.delete(params.get("id") as string);
+    revalidatePath("/exercises")
+    response = await deletedExercise;
+
+    if (response) {
+        return exerciseToDto(response);
     }
-
-    return Object.assign({}, response);;
 }
-
-export type createExerciseActionResult = InferSafeActionFnResult<typeof createExercise>;

@@ -1,11 +1,12 @@
 "use client"
 
+import { ExerciseDto } from "@/application/model/ExerciseDto";
 import ExerciseForm from "@/components/ExerciseForm";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
 
-export default function ExerciseFormDialog(params: { actionName: string, exercise?, tags: string[] }) {
+export default function ExerciseFormDialog(params: { actionName: string, exercise?: ExerciseDto, tags: string[] }) {
 
     const [dialogIsOpen, setDialogIsOpen] = useState(false);
 

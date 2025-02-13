@@ -11,10 +11,11 @@ import { DialogFooter } from "./ui/dialog";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { SelectTagInput } from "./ui/select-tag-input";
-import { createExercise, createExerciseActionResult, updateExercise } from "@/actions/ExerciseActions";
+import { createExercise, updateExercise } from "@/actions/ExerciseActions";
+import { ExerciseDto } from "@/application/model/ExerciseDto";
 
 interface ExerciseFormProps {
-    exercise,
+    exercise: ExerciseDto | undefined,
     setDialogIsOpen: (isOpen: boolean) => void, tags: string[]
 }
 
@@ -23,36 +24,46 @@ export default function ExerciseForm({ exercise, setDialogIsOpen, tags }: Exerci
     const createMode = !exercise?.id;
 
     const [message, setMessage] = useState("");
-    const [nameMessages, setNameMessages] = useState([]);
-    const [descriptionMessages, setDescriptionMessages] = useState([]);
+    const [nameMessages, setNameMessages] = useState<string[]>([]);
+    const [descriptionMessages, setDescriptionMessages] = useState<string[]>([]);
     const [selectedTags, setSelectedTags] = useState((exercise?.tags.length) ? exercise?.tags : []);
 
-    async function saveExercise(formData: FormData, serverAction: (formData: FormData) => any) {
+    async function saveExercise(formData: FormData) {
         selectedTags.forEach((tag: string) => {
             formData.append("tags", tag);
         });
 
-        const response = await serverAction(formData);
+        let response = null;
+        if (createMode) {
+            response = await createExercise(formData);
+        } else {
+            response = await updateExercise(formData);
+        }
+
+        if (!response) {
+            setMessage("Something went wrong.");
+            return;
+        }
 
         if (response.serverError) {
             setMessage(response.serverError);
             return;
         } else if (response.validationErrors) {
-            setNameMessages(response.validationErrors?.fieldErrors.name);
-            setDescriptionMessages(response.validationErrors?.fieldErrors.description);
+            if (response.validationErrors?.fieldErrors.name)
+                setNameMessages(response.validationErrors.fieldErrors.name);
+            if (response.validationErrors?.fieldErrors.description)
+                setDescriptionMessages(response.validationErrors.fieldErrors.description);
         } else {
+            console.log(response);
+
             toast(`Exercise ${response.data?.name} saved!`);
             setDialogIsOpen(false);
         }
     }
 
-    function onSubmit(formData: FormData) {
-        return createMode ? saveExercise(formData, createExercise) : saveExercise(formData, updateExercise);
-    }
-
     return (
-        <form action={onSubmit}>
-            <Input name="id" type="hidden" defaultValue={exercise?.id} />
+        <form action={saveExercise}>
+            <Input name="id" type="hidden" defaultValue={exercise?.id ? exercise.id : ""} />
             <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="name" className="text-right" hidden={exercise?.id ? true : false}>

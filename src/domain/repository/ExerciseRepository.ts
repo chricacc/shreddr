@@ -2,7 +2,7 @@ import { Exercise } from "../model/Exercise";
 
 export interface ExerciseRepository {
     findAll(): Promise<Exercise[]>;
-    findBySlug(slug: string): Promise<Exercise | undefined>;
+    findBySlug(slug: string): Promise<Exercise | null>;
     search(query: string): Promise<Exercise[]>;
     create(exercise: Exercise): Promise<Exercise | undefined>;
     update(exercise: Exercise): Promise<Exercise | undefined>;

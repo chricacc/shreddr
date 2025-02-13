@@ -57,7 +57,7 @@ export class ExercisePrismaRepository implements ExerciseRepository {
         return this.mapToDomainModels(prismaExercises);
     }
 
-    public async findBySlug(slug: string): Promise<Exercise | undefined> {
+    public async findBySlug(slug: string): Promise<Exercise | null> {
         const exercise = await prisma.exercise.findUnique({
             where: {
                 slug: slug,
@@ -68,7 +68,10 @@ export class ExercisePrismaRepository implements ExerciseRepository {
                 tags: true
             }
         })
-        return this.mapToDomainModel(exercise);
+        if (exercise)
+            return this.mapToDomainModel(exercise);
+        else
+            return null;
     }
 
     public async create(exercise: Exercise): Promise<Exercise | undefined> {
@@ -102,6 +105,10 @@ export class ExercisePrismaRepository implements ExerciseRepository {
 
     public async update(exercise: Exercise): Promise<Exercise | undefined> {
         const prismaTags = this.mapToPrismaTags(exercise.getTags());
+        let exerciseId = exercise.getId();
+        if (!exerciseId) {
+            exerciseId = "";
+        }
 
         if (exercise.getId() == null)
             throw new PersistenceError("Cannot update Exercise with id=null");
@@ -109,7 +116,7 @@ export class ExercisePrismaRepository implements ExerciseRepository {
         try {
             const updatedExercise = await prisma.exercise.update({
                 where: {
-                    id: exercise.getId(),
+                    id: exerciseId,
                 },
                 data: {
                     name: exercise.getName(),
@@ -153,7 +160,11 @@ export class ExercisePrismaRepository implements ExerciseRepository {
     }
 
     private mapToDomainModel(prismaExercise: ExerciseWithTags): Exercise {
-        const tags: string[] = prismaExercise.tags?.map(tag => tag.name);
+
+        let tags: string[] = [];
+        if (prismaExercise.tags) {
+            tags = prismaExercise.tags?.map(tag => tag.name);
+        }
         return new Exercise(prismaExercise.id, prismaExercise.name, prismaExercise.description, tags, prismaExercise.createdAt, prismaExercise.updatedAt, prismaExercise.published || false, prismaExercise.archived || false);
     };
 
