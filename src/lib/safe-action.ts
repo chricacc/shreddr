@@ -7,6 +7,7 @@ export const actionClient = createSafeActionClient({
             return error.message;
         }
 
+        console.log(error);
         return 'Oops, something went wrong, try again, or contact an admin!';
     },
     defaultValidationErrorsShape: "flattened",

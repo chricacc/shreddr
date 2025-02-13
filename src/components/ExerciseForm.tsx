@@ -103,7 +103,16 @@ export default function ExerciseForm({ exercise, setDialogIsOpen, tags }: Exerci
                     </div>
 
                 </div>
-
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="tablaturefile" className="text-right">
+                        Tablature
+                    </Label>
+                    <Input
+                        className="col-span-3"
+                        type="file"
+                        name="tablaturefile"
+                    />
+                </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="tags" className="text-right">
                         Tags
@@ -120,7 +129,7 @@ export default function ExerciseForm({ exercise, setDialogIsOpen, tags }: Exerci
                     <Label htmlFor="published" className="text-right">
                         Publish now
                     </Label>
-                    <Checkbox name="published" className="col-span-3" value="true" checked={exercise?.published} />
+                    <Checkbox name="published" className="col-span-3" defaultChecked={true} value="true" checked={exercise?.published} />
                 </div>
             </div>
 

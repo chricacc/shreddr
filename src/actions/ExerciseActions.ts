@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { ActionError } from "./model/ActionError";
+import fs from "node:fs/promises";
 
 import { z } from "zod";
 import { zfd } from "zod-form-data";
@@ -16,7 +17,8 @@ const createExerciseSchema = zfd.formData({
     name: zfd.text(z.string().min(3).max(50)),
     description: zfd.text(z.string()),
     tags: zfd.repeatable(z.array(z.string()).optional()),
-    published: zfd.checkbox({ trueValue: "true" })
+    published: zfd.checkbox({ trueValue: "true" }),
+    tablaturefile: zfd.file()
 });
 
 const updateExerciseSchema = zfd.formData({
@@ -24,7 +26,8 @@ const updateExerciseSchema = zfd.formData({
     name: zfd.text(z.string().min(3).max(50)),
     description: zfd.text(z.string()),
     tags: zfd.repeatable(z.array(z.string()).optional()),
-    published: zfd.checkbox({ trueValue: "true" })
+    published: zfd.checkbox({ trueValue: "true" }),
+    tablaturefile: zfd.file()
 });
 
 export const createExercise = actionClient
@@ -46,8 +49,11 @@ export const createExercise = actionClient
                 throw new ActionError("Unexpected error");
             }
         }
+
         revalidatePath("/exercises");
         if (response) {
+            const file = parsedInput.tablaturefile as File;
+            await saveFile(file, response.getSlug());
             return exerciseToDto(response);
         }
     });
@@ -73,9 +79,17 @@ export const updateExercise = actionClient
         }
         revalidatePath("/exercises/" + response?.getSlug());
         if (response) {
+            const file = parsedInput.tablaturefile as File;
+            await saveFile(file, response.getSlug());
             return exerciseToDto(response);
         }
     });
+
+async function saveFile(file: File, filename: string) {
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = new Uint8Array(arrayBuffer);
+    await fs.writeFile(`./public/uploads/exercises/${filename}`, buffer);
+}
 
 export async function deleteExercise(params: FormData) {
     let response = null;
@@ -85,6 +99,7 @@ export async function deleteExercise(params: FormData) {
     response = await deletedExercise;
 
     if (response) {
+        fs.unlink(`./public/uploads/exercises/${response.getSlug()}`)
         return exerciseToDto(response);
     }
 }
