@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { dependencies } from "@/dependency-injection/dependencies";
 import { Exercise } from "@/domain/model/Exercise"
+import { Dumbbell } from "lucide-react";
 
 
 export default async function ExerciseDetailPage({ params }: { params: { id: string } }) {
@@ -27,7 +28,7 @@ export default async function ExerciseDetailPage({ params }: { params: { id: str
             <CardHeader>
                 <CardTitle>
                     <div className="flex flex-row justify-between">
-                        <h1 className="text-3xl">{exercise.getName()}</h1>
+                        <h1 className="text-3xl flex items-center gap-3"><Dumbbell className="text-secondary" />{exercise.getName()}</h1>
                         <div className="flex gap-2">
                             <ExerciseFormDialog actionName="Edit" exercise={exerciseDto} tags={tags} />
                             <DeleteExerciseButton exerciseId={exercise.getId()} />
