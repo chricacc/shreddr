@@ -15,11 +15,27 @@ export class ExercisePrismaRepository implements ExerciseRepository {
         });
     }
 
-    public async findAll(): Promise<Exercise[]> {
+    public async findAll(query: string): Promise<Exercise[]> {
         const prismaExercises: ExerciseWithTags[] = await prisma.exercise.findMany({
             where: {
                 archived: false,
-                published: true
+                published: true,
+                OR: [
+                    {
+                        name: {
+                            contains: query
+                        }
+                    },
+                    {
+                        tags: {
+                            some: {
+                                name: {
+                                    contains: query
+                                }
+                            }
+                        }
+                    }
+                ]
             },
             take: 30,
             include: {

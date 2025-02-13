@@ -1,7 +1,7 @@
 import { Exercise } from "../model/Exercise";
 
 export interface ExerciseRepository {
-    findAll(): Promise<Exercise[]>;
+    findAll(query: string): Promise<Exercise[]>;
     findBySlug(slug: string): Promise<Exercise | null>;
     search(query: string): Promise<Exercise[]>;
     create(exercise: Exercise): Promise<Exercise | undefined>;
