@@ -23,7 +23,7 @@ export default function TabPlayer({ filename }: Props) {
     }
 
     function getTabFontColor(): string {
-        return colorMapping[theme]
+        return colorMapping[theme ? theme : ""]
     }
 
     useEffect(() => {
