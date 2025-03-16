@@ -69,6 +69,7 @@ export default {
 			boxShadow: {
 				'3xl': '0 0 50px rgba(0,0,0,0.5);',
 				'2xl': '0 0 30px rgba(0,0,0,0.5);',
+				'sm': '0 0 10px rgba(0,0,0,0.5);',
 			},
 		}
 	},

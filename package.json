@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -12,6 +12,7 @@
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
+    "@coderline/alphatab": "^1.4.1",
     "@mdxeditor/editor": "^3.21.2",
     "@prisma/client": "^6.3.0",
     "@radix-ui/react-checkbox": "^1.1.3",

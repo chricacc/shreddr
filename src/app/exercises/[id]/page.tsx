@@ -1,6 +1,7 @@
 import { ExerciseDto, exerciseToDto } from "@/application/model/ExerciseDto";
 import DeleteExerciseButton from "@/components/DeleteExerciseButton";
 import ExerciseFormDialog from "@/components/ExerciseFormDialog";
+import TabPlayer from "@/components/TabPlayer";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { dependencies } from "@/dependency-injection/dependencies";
@@ -39,6 +40,7 @@ export default async function ExerciseDetailPage({ params }: { params: { id: str
             </CardHeader>
             <CardContent>
                 <p>{exercise.getDescription()}</p>
+                <TabPlayer filename={exercise.getSlug()} />
             </CardContent>
             <CardFooter>
                 <div className="flex gap-2">
