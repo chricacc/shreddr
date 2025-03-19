@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { SelectTagInput } from "./ui/select-tag-input";
 import { createExercise, updateExercise } from "@/actions/ExerciseActions";
 import { ExerciseDto } from "@/application/model/ExerciseDto";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 interface ExerciseFormProps {
     exercise: ExerciseDto | undefined,
@@ -102,6 +103,27 @@ export default function ExerciseForm({ exercise, setDialogIsOpen, tags }: Exerci
                         })}
                     </div>
 
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="difficulty" className="text-right">
+                        Difficulty
+                    </Label>
+                    <div className="col-span-3">
+                        <RadioGroup defaultValue={exercise?.difficulty} name="difficulty">
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="easy" id="r1" />
+                                <Label htmlFor="r1">Easy</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="medium" id="r2" />
+                                <Label htmlFor="r2">Medium</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="hard" id="r3" />
+                                <Label htmlFor="r3">Hard</Label>
+                            </div>
+                        </RadioGroup>
+                    </div>
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="tablaturefile" className="text-right">

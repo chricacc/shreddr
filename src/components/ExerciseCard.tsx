@@ -1,6 +1,7 @@
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Exercise } from "@/domain/model/Exercise";
+import DifficultyBadge from "./DifficultyBadge";
 
 export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
     return (
@@ -13,6 +14,7 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
             </CardContent>
             <CardFooter className="overflow-hidden px-4 pb-3 pt-0 h-1/2">
                 <div className="flex flex-wrap gap-1 justify-start">
+                    <DifficultyBadge level={exercise.getDifficulty()} />
                     {exercise.getTags().map((tag: string) => {
                         return <Badge key={tag} className="h-5 text-xs">{tag}</Badge>
                     })}

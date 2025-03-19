@@ -1,3 +1,6 @@
+import { Difficulty } from "./Difficulty";
+
+
 export class Exercise {
     private id: string | null;
     private name: string;
@@ -8,8 +11,9 @@ export class Exercise {
     private createdAt: Date;
     private updatedAt: Date;
     private archived: boolean = false;
+    private difficulty: Difficulty;
 
-    public constructor(id: string | null, name: string, description: string, tags: string[], createdAt?: Date, updatedAt?: Date, published?: boolean, archived?: boolean) {
+    public constructor(id: string | null, name: string, description: string, difficulty: Difficulty, tags: string[], createdAt?: Date, updatedAt?: Date, published?: boolean, archived?: boolean) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -19,6 +23,7 @@ export class Exercise {
         this.published = published ? published : false;
         this.archived = archived ? archived : false;
         this.slug = this.generateSlug();
+        this.difficulty = difficulty;
     }
 
     public publish() {
@@ -65,7 +70,25 @@ export class Exercise {
         return this.archived;
     }
 
+    public getDifficulty() {
+        return this.difficulty;
+    }
+
     private generateSlug() {
-        return this.name.replace(/\s+/g, "-").toLowerCase();
+        let str = this.name.replace(/^\s+|\s+$/g, ''); // trim
+        str = str.toLowerCase();
+
+        // remove accents, swap ñ for n, etc
+        const from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";
+        const to = "aaaaeeeeiiiioooouuuunc------";
+        for (let i = 0, l = from.length; i < l; i++) {
+            str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+        }
+
+        str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+            .replace(/\s+/g, '-') // collapse whitespace and replace by -
+            .replace(/-+/g, '-'); // collapse dashes
+
+        return str;
     }
 }

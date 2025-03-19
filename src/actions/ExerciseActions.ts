@@ -16,6 +16,7 @@ import { exerciseToDto } from "../application/model/ExerciseDto";
 const createExerciseSchema = zfd.formData({
     name: zfd.text(z.string().min(3).max(50)),
     description: zfd.text(z.string()),
+    difficulty: zfd.text(z.enum(["easy", "medium", "hard"])),
     tags: zfd.repeatable(z.array(z.string()).optional()),
     published: zfd.checkbox({ trueValue: "true" }),
     tablaturefile: zfd.file()
@@ -25,6 +26,7 @@ const updateExerciseSchema = zfd.formData({
     id: zfd.text(z.string()),
     name: zfd.text(z.string().min(3).max(50)),
     description: zfd.text(z.string()),
+    difficulty: zfd.text(z.enum(["easy", "medium", "hard"])),
     tags: zfd.repeatable(z.array(z.string()).optional()),
     published: zfd.checkbox({ trueValue: "true" }),
     tablaturefile: zfd.file()
@@ -34,7 +36,7 @@ export const createExercise = actionClient
     .schema(createExerciseSchema)
     .action(async ({ parsedInput }) => {
 
-        const exercise: Exercise = new Exercise(null, parsedInput.name, parsedInput.description, parsedInput.tags ? parsedInput.tags : []);
+        const exercise: Exercise = new Exercise(null, parsedInput.name, parsedInput.description, parsedInput.difficulty, parsedInput.tags ? parsedInput.tags : []);
 
         if (parsedInput.published)
             exercise.publish();
@@ -62,7 +64,7 @@ export const updateExercise = actionClient
     .schema(updateExerciseSchema)
     .action(async ({ parsedInput }) => {
 
-        const exercise: Exercise = new Exercise(parsedInput.id, parsedInput.name, parsedInput.description, parsedInput.tags ? parsedInput.tags : []);
+        const exercise: Exercise = new Exercise(parsedInput.id, parsedInput.name, parsedInput.description, parsedInput.difficulty, parsedInput.tags ? parsedInput.tags : []);
 
         if (parsedInput.published)
             exercise.publish();

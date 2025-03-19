@@ -1,5 +1,6 @@
 import { ExerciseDto, exerciseToDto } from "@/application/model/ExerciseDto";
 import DeleteExerciseButton from "@/components/DeleteExerciseButton";
+import DifficultyBadge from "@/components/DifficultyBadge";
 import ExerciseFormDialog from "@/components/ExerciseFormDialog";
 import TabPlayer from "@/components/TabPlayer";
 import { Badge } from "@/components/ui/badge";
@@ -44,6 +45,8 @@ export default async function ExerciseDetailPage({ params }: { params: { id: str
             </CardContent>
             <CardFooter>
                 <div className="flex gap-2">
+
+                    <DifficultyBadge level={exercise.getDifficulty()} />
                     {exercise.getTags().map((tag) => {
                         return <Badge key={tag}>{tag}</Badge>
                     })}

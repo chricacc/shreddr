@@ -14,7 +14,7 @@ export default async function ExercisesPage(props: {
 }) {
     const searchParams = await props.searchParams;
     const query = searchParams?.query || '';
-    const currentPage = Number(searchParams?.page) || 1;
+    //const currentPage = Number(searchParams?.page) || 1;
 
     const [exercises, count, tags] = await Promise.all([
         dependencies.exerciseRepository.findAll(query),

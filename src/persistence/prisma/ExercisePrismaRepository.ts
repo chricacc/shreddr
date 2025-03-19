@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { ExerciseWithTags } from "./model/ExerciseWithTags";
 import { Prisma } from "@prisma/client";
 import { PersistenceError } from "@/domain/errors/PersistenceError";
+import { Difficulty } from "@/domain/model/Difficulty";
 
 export class ExercisePrismaRepository implements ExerciseRepository {
     async count(): Promise<number> {
@@ -97,6 +98,7 @@ export class ExercisePrismaRepository implements ExerciseRepository {
                 data: {
                     name: exercise.getName(),
                     description: exercise.getDescription(),
+                    difficulty: exercise.getDifficulty(),
                     slug: exercise.getSlug(),
                     published: exercise.isPublished(),
                     tags: {
@@ -137,6 +139,7 @@ export class ExercisePrismaRepository implements ExerciseRepository {
                 data: {
                     name: exercise.getName(),
                     description: exercise.getDescription(),
+                    difficulty: exercise.getDifficulty(),
                     slug: exercise.getSlug(),
                     published: exercise.isPublished(),
                     tags: {
@@ -181,7 +184,9 @@ export class ExercisePrismaRepository implements ExerciseRepository {
         if (prismaExercise.tags) {
             tags = prismaExercise.tags?.map(tag => tag.name);
         }
-        return new Exercise(prismaExercise.id, prismaExercise.name, prismaExercise.description, tags, prismaExercise.createdAt, prismaExercise.updatedAt, prismaExercise.published || false, prismaExercise.archived || false);
+        const difficulty: Difficulty = prismaExercise.difficulty;
+
+        return new Exercise(prismaExercise.id, prismaExercise.name, prismaExercise.description, difficulty, tags, prismaExercise.createdAt, prismaExercise.updatedAt, prismaExercise.published || false, prismaExercise.archived || false);
     };
 
     private mapToPrismaTags(tags: string[]) {
