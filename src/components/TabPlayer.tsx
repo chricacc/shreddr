@@ -58,6 +58,10 @@ export default function TabPlayer({ filename }: Props) {
             }
         });
 
+
+        api.metronomeVolume = 1
+        api.countInVolume = 1
+
         setApi(api);
 
         return () => {
