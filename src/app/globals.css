@@ -12,6 +12,14 @@ body {
   width: 3px;
 }
 
+.at-cursor-bar {
+  background: rgba(53, 191, 255, 0.25);
+}
+
+.at-selection div {
+  background: rgba(64, 64, 255, 0.1);
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
