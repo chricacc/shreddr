@@ -6,6 +6,12 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.at-cursor-beat {
+  /* Defines the beat cursor */
+  background: rgba(64, 64, 255, 0.75);
+  width: 3px;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -87,4 +93,6 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+
+
 }

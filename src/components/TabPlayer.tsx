@@ -41,9 +41,11 @@ export default function TabPlayer({ filename }: Props) {
             player: {
                 enablePlayer: true,
                 enableCursor: true,
-                enableUserInteraction: true,
-                soundFont: '/alphatab/soundfont/sonivox.sf2',
+                enableAnimatedBeatCursor: true,
                 enableElementHighlighting: true,
+                enableUserInteraction: true,
+                scrollMode: 1,
+                soundFont: '/alphatab/soundfont/sonivox.sf2',
             },
             display: {
                 resources: {
@@ -73,7 +75,7 @@ export default function TabPlayer({ filename }: Props) {
         <>
             <main>
                 <Button onClick={() => playPause()}>Play/Pause</Button>
-                <div className="shadow-sm mt-4 rounded-lg max-h-80 overflow-scroll">
+                <div className="shadow-sm mt-4 rounded-lg">
                     <div className="m-4" ref={elementRef}></div>
                 </div>
             </main>
