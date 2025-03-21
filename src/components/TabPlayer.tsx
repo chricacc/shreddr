@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react";
-import { AlphaTabApi, Settings, Color } from "@coderline/alphatab";
+import { AlphaTabApi } from "@coderline/alphatab";
 import { Button } from "./ui/button";
 import { useTheme } from "next-themes";
 
@@ -17,8 +17,8 @@ export default function TabPlayer({ filename }: Props) {
     const colorMapping: {
         [key: string]: string
     } = {
-        "dark": "#fff",
-        "light": "#000",
+        "dark": "#eee",
+        "light": "#111",
         "system": "#888"
     }
 
@@ -31,8 +31,7 @@ export default function TabPlayer({ filename }: Props) {
         console.log("forcedTheme=" + forcedTheme);
         console.log("systemTheme=" + systemTheme);
         console.log("resolvedTheme=" + resolvedTheme);
-        const color = getTabFontColor();
-        console.log("color=" + color);
+        const tabFontColor = getTabFontColor();
         const api = new AlphaTabApi(elementRef.current!, {
             core: {
                 file: '/uploads/exercises/' + filename,
@@ -49,12 +48,12 @@ export default function TabPlayer({ filename }: Props) {
             },
             display: {
                 resources: {
-                    staffLineColor: color,
-                    barSeparatorColor: color,
-                    mainGlyphColor: color,
-                    secondaryGlyphColor: color,
-                    scoreInfoColor: color,
-                    barNumberColor: color,
+                    staffLineColor: tabFontColor,
+                    barSeparatorColor: tabFontColor,
+                    mainGlyphColor: tabFontColor,
+                    secondaryGlyphColor: tabFontColor,
+                    scoreInfoColor: tabFontColor,
+                    barNumberColor: tabFontColor,
                 },
             }
         });
