@@ -29,7 +29,7 @@ const updateExerciseSchema = zfd.formData({
     difficulty: zfd.text(z.enum(["easy", "medium", "hard"])),
     tags: zfd.repeatable(z.array(z.string()).optional()),
     published: zfd.checkbox({ trueValue: "true" }),
-    tablaturefile: zfd.file()
+    tablaturefile: zfd.file(z.instanceof(File).optional()),
 });
 
 export const createExercise = actionClient
@@ -55,7 +55,8 @@ export const createExercise = actionClient
         revalidatePath("/exercises");
         if (response) {
             const file = parsedInput.tablaturefile as File;
-            await saveFile(file, response.getSlug());
+            if (file)
+                await saveFile(file, response.getSlug());
             return exerciseToDto(response);
         }
     });
@@ -82,7 +83,8 @@ export const updateExercise = actionClient
         revalidatePath("/exercises/" + response?.getSlug());
         if (response) {
             const file = parsedInput.tablaturefile as File;
-            await saveFile(file, response.getSlug());
+            if (file)
+                await saveFile(file, response.getSlug());
             return exerciseToDto(response);
         }
     });

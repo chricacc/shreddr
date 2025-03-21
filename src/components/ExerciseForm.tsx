@@ -27,6 +27,7 @@ export default function ExerciseForm({ exercise, setDialogIsOpen, tags }: Exerci
     const [message, setMessage] = useState("");
     const [nameMessages, setNameMessages] = useState<string[]>([]);
     const [descriptionMessages, setDescriptionMessages] = useState<string[]>([]);
+    const [fileMessages, setFileMessages] = useState<string[]>([]);
     const [selectedTags, setSelectedTags] = useState((exercise?.tags.length) ? exercise?.tags : []);
 
     async function saveExercise(formData: FormData) {
@@ -54,6 +55,8 @@ export default function ExerciseForm({ exercise, setDialogIsOpen, tags }: Exerci
                 setNameMessages(response.validationErrors.fieldErrors.name);
             if (response.validationErrors?.fieldErrors.description)
                 setDescriptionMessages(response.validationErrors.fieldErrors.description);
+            if (response.validationErrors?.fieldErrors.tablaturefile)
+                setFileMessages(response.validationErrors.fieldErrors.tablaturefile);
         } else {
             console.log(response);
 
@@ -134,6 +137,11 @@ export default function ExerciseForm({ exercise, setDialogIsOpen, tags }: Exerci
                         type="file"
                         name="tablaturefile"
                     />
+                    {fileMessages?.map((text) => {
+                        return (
+                            <span key="{text}" className="text-sm">{text}</span>
+                        )
+                    })}
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="tags" className="text-right">

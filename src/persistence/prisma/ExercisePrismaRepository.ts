@@ -124,12 +124,10 @@ export class ExercisePrismaRepository implements ExerciseRepository {
     public async update(exercise: Exercise): Promise<Exercise | undefined> {
         const prismaTags = this.mapToPrismaTags(exercise.getTags());
         let exerciseId = exercise.getId();
+
         if (!exerciseId) {
             exerciseId = "";
         }
-
-        if (exercise.getId() == null)
-            throw new PersistenceError("Cannot update Exercise with id=null");
 
         try {
             const updatedExercise = await prisma.exercise.update({
