@@ -61,6 +61,7 @@ export default function TabPlayer({ filename }: Props) {
 
         api.metronomeVolume = 1
         api.countInVolume = 1
+        api.isLooping = true
 
         setApi(api);
 
